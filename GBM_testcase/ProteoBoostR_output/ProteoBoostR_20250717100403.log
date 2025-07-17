@@ -1,0 +1,68 @@
+
+[2025-07-17 10:04:33.558691] Annotation file loaded. Rows: 55 Cols: 2
+[2025-07-17 10:07:23.384185] Subset file uploaded with 20 IDs.
+[2025-07-17 10:07:27.234904] Protein matrix loaded. Dimensions: 4680 x 55
+[2025-07-17 10:07:27.237777] Auto-merging annotation + protein data...
+[2025-07-17 10:07:27.373328] Applying subset from file with 20 IDs.
+[2025-07-17 10:07:27.376744] Final columns after numeric conversion: sample_id, P31323, Q8WWI1, O95197, Q9UJ14, Q9UPX0, Q8TAC9, O94910, Q9BRQ6, Q8N608, P20020, Q15773, Q6UXD5, Q7L1I2, P63215, P32418, P53365, Q9Y5K8, Q16720, Q9UIW2, Q9NYI0, subtypes
+[2025-07-17 10:07:27.378442] Merging complete.
+[2025-07-17 10:07:27.382907] User clicked Continue on Input Tab.
+[2025-07-17 10:07:27.392669] Data subset applied to training and testing matrices.
+[2025-07-17 10:07:27.401583] Training and testing matrices written (transposed).
+[2025-07-17 10:07:29.185691] User clicked Continue on Model Training. Starting Bayesian Optimization and training model...
+[2025-07-17 10:07:29.187707] Bayesian-opt bounds: eta=[0.001, 0.200], max_depth=[2, 4], subsample=[0.80, 1.00], colsample_bytree=[0.80, 1.00], min_child_weight=[2, 10], gamma=[0.00, 2.00], alpha=[0.00, 1.00], lambda=[1, 10]
+[2025-07-17 10:07:29.517811] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:07:29.519818] ERROR: cv_result is NULL.
+[2025-07-17 10:07:29.787924] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:07:29.789931] ERROR: cv_result is NULL.
+[2025-07-17 10:07:30.997048] xgb_cv_bayes => rounds: 2 eta: 0.122245671843179 max_depth: 2 subsample: 0.856546716718003 colsample_bytree: 0.853364156000316 min_child_weight: 3 gamma: 1.82931633200496 alpha: 0.304672203026712 lambda: 3.32928836788051 AUC: 0.98
+[2025-07-17 10:07:32.43945] xgb_cv_bayes => rounds: 2 eta: 0.125052508893656 max_depth: 3 subsample: 0.984686696855351 colsample_bytree: 0.837344557931647 min_child_weight: 2 gamma: 1.66269009374082 alpha: 0.50730687007308 lambda: 9.92935375776142 AUC: 0.985714285714286
+[2025-07-17 10:07:33.460239] xgb_cv_bayes => rounds: 2 eta: 0.172322161327815 max_depth: 3 subsample: 0.858463168051094 colsample_bytree: 0.846445182105526 min_child_weight: 4 gamma: 0.0915405265986919 alpha: 0.181096208281815 lambda: 8.26617106283084 AUC: 0.5
+[2025-07-17 10:07:53.125436] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:07:53.127403] ERROR: cv_result is NULL.
+[2025-07-17 10:08:14.267794] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:08:14.269872] ERROR: cv_result is NULL.
+[2025-07-17 10:08:38.037276] xgb_cv_bayes => rounds: 2 eta: 0.0379450543990733 max_depth: 3 subsample: 0.917505039780272 colsample_bytree: 0.99316549751818 min_child_weight: 2 gamma: 1.09617738676545 alpha: 0.828804400885991 lambda: 3.29612445587685 AUC: 0.9875
+[2025-07-17 10:08:58.523232] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:08:58.525312] ERROR: cv_result is NULL.
+[2025-07-17 10:09:25.375951] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:09:25.377973] ERROR: cv_result is NULL.
+[2025-07-17 10:09:54.552162] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:09:54.554192] ERROR: cv_result is NULL.
+[2025-07-17 10:10:21.848727] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:10:21.850731] ERROR: cv_result is NULL.
+[2025-07-17 10:10:49.571155] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:10:49.573249] ERROR: cv_result is NULL.
+[2025-07-17 10:11:21.177029] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:11:21.179004] ERROR: cv_result is NULL.
+[2025-07-17 10:11:54.823104] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:11:54.825178] ERROR: cv_result is NULL.
+[2025-07-17 10:12:27.459931] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:12:27.462032] ERROR: cv_result is NULL.
+[2025-07-17 10:13:05.2379] xgb_cv_bayes => rounds: 2 eta: 0.181319475423742 max_depth: 2 subsample: 0.919000902685354 colsample_bytree: 0.908761669476449 min_child_weight: 3 gamma: 0.259709850494548 alpha: 0.149375501140828 lambda: 3.53815051592077 AUC: 0.983333333333333
+[2025-07-17 10:13:45.717977] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:13:45.719969] ERROR: cv_result is NULL.
+[2025-07-17 10:14:23.36897] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:14:23.371025] ERROR: cv_result is NULL.
+[2025-07-17 10:15:06.664865] xgb_cv_bayes => rounds: 2 eta: 0.0353099138979431 max_depth: 3 subsample: 0.855275389798516 colsample_bytree: 0.941511411051035 min_child_weight: 2 gamma: 0.373987669061559 alpha: 0.102664044951736 lambda: 3.54611682303332 AUC: 1
+[2025-07-17 10:15:45.055672] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:15:45.057722] ERROR: cv_result is NULL.
+[2025-07-17 10:16:21.323872] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:16:21.325898] ERROR: cv_result is NULL.
+[2025-07-17 10:16:53.900461] xgb_cv_bayes => rounds: 2 eta: 0.148769816861473 max_depth: 4 subsample: 0.936323113233552 colsample_bytree: 0.816989224962889 min_child_weight: 9 gamma: 0.335864357650275 alpha: 0.39711620891804 lambda: 3.59332978420129 AUC: 0.5
+[2025-07-17 10:17:38.259799] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-07-17 10:17:38.261952] ERROR: cv_result is NULL.
+[2025-07-17 10:18:16.572281] xgb_cv_bayes => rounds: 2 eta: 0.150192029233511 max_depth: 4 subsample: 0.872480859957114 colsample_bytree: 0.838114403972591 min_child_weight: 5 gamma: 0.630007734035856 alpha: 0.890488506862712 lambda: 3.29476777283711 AUC: 0.5
+[2025-07-17 10:18:16.612605] Bayesian Optimization done. Best AUC = 1
+[2025-07-17 10:18:16.617192] Final training columns used for XGB: P31323, Q8WWI1, O95197, Q9UJ14, Q9UPX0, Q8TAC9, O94910, Q9BRQ6, Q8N608, P20020, Q15773, Q6UXD5, Q7L1I2, P63215, P32418, P53365, Q9Y5K8, Q16720, Q9UIW2, Q9NYI0
+[2025-07-17 10:18:18.915105] Model saved to: D:\data\Annika\ProteoBoostR\Manuscript_final\Github\test/xgb_model_20250717100403.rds
+[2025-07-17 10:18:18.919504] Best hyperparameters written.
+[2025-07-17 10:18:18.921947] Final XGBoost model trained.
+[2025-07-17 11:01:58.396275] Evaluating model on test data...
+[2025-07-17 11:01:58.399105] Test model columns used for XGB: P31323, Q8WWI1, O95197, Q9UJ14, Q9UPX0, Q8TAC9, O94910, Q9BRQ6, Q8N608, P20020, Q15773, Q6UXD5, Q7L1I2, P63215, P32418, P53365, Q9Y5K8, Q16720, Q9UIW2, Q9NYI0
+[2025-07-17 11:01:58.482721] Test evaluation complete.
+[2025-07-17 11:01:58.487976] Predicted probabilities written.
+[2025-07-17 11:01:58.493082] Evaluation results written.
+[2025-07-17 11:01:58.496875] Confusion matrix written.
+[2025-07-17 11:01:59.358796] ROC curve written as PNG.
+[2025-07-17 11:01:59.360811] Test outputs written.

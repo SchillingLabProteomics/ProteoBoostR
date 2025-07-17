@@ -1,0 +1,208 @@
+### ProteoBoostR ###
+
+#Application example: Learning subtypes in GBM
+
+#libraries
+```{r}
+library(tidyverse)
+#library(lubridate)
+#library(survival)
+#library(survminer)
+#library(dplyr)
+#library(grDevices)
+#library(knitr)
+#library(rstatix)
+#library(ggpubr)
+#library(DOSE)
+#library(org.Hs.eg.db)
+#library(enrichplot)
+#library(ggnewscale)
+#library(ggupset)
+#library(clusterProfiler)
+#library(made4)
+#library(glmnet)
+#library(ggridges)
+#library(CoxBoost)
+library(readxl)
+#library(gtsummary)
+#`%notin%` <- Negate(`%in%`)
+#library(ggtext)
+library(limma)
+#library(Biostrings)
+#library(HarmonizR)
+library(xgboost)
+library(ggalluvial)
+```
+
+#load data
+```{r}
+#Werner et al 
+Werner_data <- read.table("Werner_data.tsv", header = TRUE)
+
+Werner_annot <- read.table("Werner_annot.tsv", header = TRUE)
+
+#CPTAC
+CPTAC_data <- read.table("CPTAC_data.tsv", header = TRUE)
+
+CPTAC_annot <- read.table("CPTAC_annot.tsv", header = TRUE)
+```
+
+#differential abundance analysis
+```{r}
+subtypes <- Werner_annot$subtypes
+
+design <- model.matrix(~0+subtypes)
+
+row.names(design) <- colnames(Werner_data)
+colnames(design) <- c("One", "Rest")
+
+#define contrasts
+contrast.matrix <- makeContrasts(OnevsRest = One-Rest,
+                                 levels = design)
+
+n_contrasts <- dim(contrast.matrix)[2]
+
+#run limma
+fit <- lmFit(Werner_data, 
+             design = design,
+             method = "robust")
+
+fit2 <- contrasts.fit(fit, 
+                      contrast.matrix)
+
+fit2 <- eBayes(fit2)
+
+limma_subtypes <- topTable(fit2, adjust.method = "BH", number = Inf)
+
+limma_subtypes$Protein.Group <- row.names(limma_subtypes)
+
+#volcano plot
+limma_subtypes <- limma_subtypes %>%
+  mutate(Differentially_expressed = case_when(adj.P.Val <= 0.05 ~ TRUE, TRUE ~ FALSE)) 
+
+limma_subtypes <- limma_subtypes %>%
+  mutate(col = case_when(Differentially_expressed == TRUE & logFC < 0 ~ "other", 
+                         Differentially_expressed == TRUE & logFC > 0 ~ "neuronal",
+                         Differentially_expressed == FALSE ~ "none")) 
+
+limma_subtypes$Differentially_expressed <- as.character(limma_subtypes$Differentially_expressed)
+
+ggplot(data = limma_subtypes, 
+       mapping = aes(x = logFC,
+                     y = -log10(adj.P.Val),
+                     color = col)) + 
+  geom_point(size = 0.2) + 
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "gray20", size = 0.5) +
+  labs(y = "-Log10 (adj. p-value)", x = "Log2 FC") + 
+  scale_y_continuous(limits = c(0, 20), breaks = c(0, 10, 20)) +
+  theme(
+        axis.text = element_text(size = 8, color = "black"),
+        axis.title.x = element_text(size = 8, color = "black", face = "bold", margin = margin(t = 0)),
+        axis.title.y = element_text(size = 8, color = "black", face = "bold", margin = margin(r = 0)),
+        strip.text = element_text(size = 8, color = "black", face = "bold"),
+        strip.background = element_rect(fill = "white"),
+        legend.text = element_text(size = 8, color = "black"),
+        legend.title = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(color = "white"),
+        panel.border = element_rect(colour = "black", 
+                                    fill = NA, 
+                                    linewidth = 0.8),
+        legend.spacing.y = unit(0.5, "cm"),
+        legend.position = "none") +
+  scale_color_manual(values = c("neuronal" = "#4eb3d3", "other" = "#feb24c", "FALSE" = "grey20"))
+
+features <- limma_subtypes %>%
+  filter(col == "neuronal") %>%
+  arrange(adj.P.Val) %>%
+  head(20)
+features <- features$Protein.Group
+
+write.table(features, file = "features.tsv", 
+            quote = FALSE,      # no quotes around strings
+            row.names = FALSE,  # no row numbers
+            col.names = FALSE,  # no column header
+            sep = "\t")         # tab-separated
+```
+
+#run ProteoBoostR
+```{r}
+#install ProteoBoostR
+
+#train model on Werner data
+#subtype 1 as positive class, subtype2+3+4 as negative class
+#use subset of features
+#use a train/test split of 0.7
+#use the default parameter bounds
+
+```
+
+#apply model on CPTAC
+```{r}
+#load xgboost model
+xgb_model <- readRDS("ProteoBoostR_output\\xgb_model.rds")
+
+#prepare CPTAC
+CPTAC_data_xgb <- CPTAC_data[features,]
+
+CPTAC_data_xgb <- as.data.frame(t(CPTAC_data_xgb))
+
+#apply model
+CPTAC_preds <- predict(xgb_model, xgb.DMatrix(data = as.matrix(CPTAC_data_xgb)))
+
+CPTAC_prediction <- data.frame(case_id = rownames(CPTAC_data_xgb),
+                               preds = CPTAC_preds)
+
+CPTAC_prediction <- left_join(CPTAC_prediction, CPTAC_annot)
+
+top_indices <- order(CPTAC_preds, decreasing = TRUE)[1:20]
+bottom_indices <- order(CPTAC_preds, decreasing = FALSE)[1:20]
+
+CPTAC_prediction <- CPTAC_prediction[c(top_indices,bottom_indices),]
+
+CPTAC_prediction$groups_assigned <- c(rep("Neuronal", 20), rep("Other", 20))
+
+CPTAC_prediction <- left_join(CPTAC_prediction, CPTAC_annot)
+
+#alluvial plot with CPTAC nmf clusters
+CPTAC_prediction$Freq = rep(1, nrow(CPTAC_prediction))
+
+CPTAC_prediction <- CPTAC_prediction %>%
+  mutate(multiomic_merged = case_when(multiomic ==  "nmf1" ~ "nmf1",
+                                      multiomic == "nmf2" ~ "nmf2+3",
+                                      multiomic == "nmf3" ~ "nmf2+3"))
+
+CPTAC_prediction$groups_assigned <- factor(CPTAC_prediction$groups_assigned,
+                                           levels = c("Other", "Neuronal"))
+
+CPTAC_prediction$multiomic <- factor(CPTAC_prediction$multiomic,
+                                                     levels = c("nmf3", "nmf2", "nmf1"))
+
+
+ggplot(CPTAC_prediction,
+       aes(y =  Freq, axis1 = groups_assigned, axis2 = multiomic)) +
+  geom_alluvium(aes(fill = groups_assigned), width = 1/8, alpha = 1) +
+  geom_stratum(width = 1/8) +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), label.size = 0, size = 1.9, angle = 90) +
+  scale_x_discrete(limits = c("ProteoBoostR", "CPTAC"), expand = c(.05, .05)) +
+  scale_y_continuous(breaks = c(0,20,40)) + 
+  labs(y = "Frequency", x = "Subtype ") +
+  theme(
+        axis.text = element_text(size = 8, color = "black"),
+        axis.title.x = element_text(size = 8, color = "black", face = "bold", margin = margin(t = 0)),
+        axis.title.y = element_text(size = 8, color = "black", face = "bold", margin = margin(r = 0)),
+        strip.text = element_text(size = 8, color = "black", face = "bold"),
+        strip.background = element_rect(fill = "white"),
+        legend.text = element_text(size = 8, color = "black"),
+        legend.title = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(color = "white"),
+        panel.border = element_rect(colour = "black", 
+                                    fill = NA, 
+                                    linewidth = 0.8),
+        legend.spacing.y = unit(0.5, "cm"),
+        legend.position = "none") +
+  scale_fill_manual(values = c("Other" = "#feb24c", "Neuronal" = "#4eb3d3"))
+
+```
+

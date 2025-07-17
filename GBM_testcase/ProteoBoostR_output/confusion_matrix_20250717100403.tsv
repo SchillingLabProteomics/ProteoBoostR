@@ -1,0 +1,5 @@
+Prediction	Reference	Freq
+subtype2+3+4	subtype2+3+4	13
+subtype1	subtype2+3+4	0
+subtype2+3+4	subtype1	0
+subtype1	subtype1	3
