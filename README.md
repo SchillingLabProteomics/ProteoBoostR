@@ -2,6 +2,8 @@
 
 ProteoBoostR is a Shiny-based tool for supervised classification (e.g. biomarker identification) in proteomics data. It leverages the powerful XGBoost algorithm combined with Bayesian optimization to train and evaluate predictive models. The tool automatically merges proteomics expression data with sample annotations, performs data preprocessing, and outputs key files for further analysis.
 
+![ProteoBoostR UI](screenshot_ProteoBoostR_UI.png)
+
 ## Features
 
 - **Data Preprocessing:**  
