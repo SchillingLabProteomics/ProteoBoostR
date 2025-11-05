@@ -183,7 +183,7 @@ ui <- dashboardPage(
                     ),
                     box(title = "Annotation Column Selection & Class Labels", status = "primary", width = 6,
                         uiOutput("annotationColUI"),
-                        helpText("Pick the column for class label (sample_id excludfed)."),
+                        helpText("Pick the column for class label (sample_id excluded)."),
                         br(),
                         uiOutput("classSelectionUI"),
                         helpText("Define negative (0) and positive (1) classes.")
