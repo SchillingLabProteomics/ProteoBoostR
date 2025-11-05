@@ -92,6 +92,26 @@ ui <- dashboardPage(
               border-left-color: #ffc133 !important;
             }
 
+            /* Hover text/icons white */
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li > a:hover,
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li:hover > a,
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li > a:focus {
+              color: #fff !important;
+            }
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li > a:hover .fa,
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li:hover > a .fa,
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li > a:focus .fa {
+              color: #fff !important;
+            }
+
+            /* Active text/icons white */
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li.active > a {
+              color: #fff !important;
+            }
+            .skin-blue .main-sidebar .sidebar .sidebar-menu > li.active > a .fa {
+              color: #fff !important;
+            }
+
             .control-sidebar-light
 
             /* Content background */
