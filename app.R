@@ -12,31 +12,31 @@ library(ggplot2)
 library(fontawesome)
 
 preprocessData <- function(df, annotationColumn, neg_label, pos_label) {
-  # filter out rows with NA in annotationColumn
-  df <- df[!is.na(df[[annotationColumn]]), ]
-  
-  # keep only rows where annotationColumn is either pos_label or neg_label
-  df <- df[df[[annotationColumn]] %in% c(neg_label, pos_label), ]
-  
-  # convert annotationColumn to a factor with specified levels
-  df[[annotationColumn]] <- factor(df[[annotationColumn]], levels = c(neg_label, pos_label))
-  
-  return(df)
+    # filter out rows with NA in annotationColumn
+    df <- df[!is.na(df[[annotationColumn]]), ]
+
+    # keep only rows where annotationColumn is either pos_label or neg_label
+    df <- df[df[[annotationColumn]] %in% c(neg_label, pos_label), ]
+
+    # convert annotationColumn to a factor with specified levels
+    df[[annotationColumn]] <- factor(df[[annotationColumn]], levels = c(neg_label, pos_label))
+
+    return(df)
 }
 
 resolveOutputDir <- function(userPath) {
-  configFile <- "ProteoBoostR.filesystem"
-  if (file.exists(configFile)) {
-    # Docker mode: enforce folder name (no slashes)
-    if (grepl("[/\\\\]", userPath)) {
-      return(NA)
-    }
+    configFile <- "ProteoBoostR.filesystem"
+    if (file.exists(configFile)) {
+        # Docker mode: enforce folder name (no slashes)
+        if (grepl("[/\\\\]", userPath)) {
+            return(NA)
+        }
     systemRoot <- trimws(readLines(configFile, n = 1))
     return(file.path(systemRoot, userPath))
-  } else {
-    # local mode: use the user input as provided
-    return(userPath)
-  }
+    } else {
+        # local mode: use the user input as provided
+        return(userPath)
+    }
 }
 
 ui <- dashboardPage(
