@@ -140,7 +140,6 @@ ui <- dashboardPage(
             menuItem("Input", tabName = "input_tab", icon = icon("upload")),
             menuItem("Model Training", tabName = "train_tab", icon = icon("cogs")),
             menuItem("Model Testing", tabName = "test_tab", icon = icon("play")),
-            menuItem("Performance Visualization", tabName = "perf_tab", icon = icon("chart-line")),
             menuItem("Log", tabName = "log_tab", icon = icon("clipboard-list"))
         )
     ),
@@ -262,10 +261,7 @@ ui <- dashboardPage(
             tabItem(tabName = "test_tab",
                 fluidRow(
                     box(title = "Test Model", status = "primary", width = 12,
-                        fileInput("pretrainedModel", "Pretrained Model (.rds)"),
-                        helpText("Disabled if an in‑session model exists.", style = "margin-top: -20px"),
-                        br(),
-                        actionButton("evaluateContinueButton", "Continue to Evaluate", icon = icon("play"))
+                        actionButton("evaluateContinueButton", "Apply Model", icon = icon("play"))
                     )
                 ),
                 fluidRow(
@@ -277,21 +273,8 @@ ui <- dashboardPage(
                     )
                 ),
                 fluidRow(
-                    box(status = "primary", width = 12,
-                        actionButton("testToPerfButton", "Continue to Visualization", icon = icon("arrow-right"))
-                    )
-                )
-            ),
-            # performance visualization tab
-            tabItem(tabName = "perf_tab",
-            fluidRow(
-                    box(title = "ROC Curve", status = "primary", width = 8,
-                        plotOutput("rocPlot", height = "400px")
-                    )
-                ),
-                fluidRow(
-                    box(status = "primary", width = 12,
-                        actionButton("perfToLogButton", "Continue to Log", icon = icon("arrow-right"))
+                    box(title = "ROC Curve", status = "primary", width = 12,
+                        plotOutput("rocPlot", height = "360px")
                     )
                 )
             ),
@@ -405,7 +388,6 @@ server <- function(input, output, session) {
         shinyjs::addClass(selector = "a[data-value='input_tab']", class = "tab-disabled")
         shinyjs::addClass(selector = "a[data-value='train_tab']", class = "tab-disabled")
         shinyjs::addClass(selector = "a[data-value='test_tab']", class = "tab-disabled")
-        shinyjs::addClass(selector = "a[data-value='perf_tab']", class = "tab-disabled")
     }
 
     enableTabsBasedOnInputs <- function() {
@@ -413,11 +395,9 @@ server <- function(input, output, session) {
         if (validInput) {
             shinyjs::removeClass(selector = "a[data-value='train_tab']", class = "tab-disabled")
             shinyjs::removeClass(selector = "a[data-value='test_tab']", class = "tab-disabled")
-            shinyjs::removeClass(selector = "a[data-value='perf_tab']", class = "tab-disabled")
         } else {
             shinyjs::addClass(selector = "a[data-value='train_tab']", class = "tab-disabled")
             shinyjs::addClass(selector = "a[data-value='test_tab']", class = "tab-disabled")
-            shinyjs::addClass(selector = "a[data-value='perf_tab']", class = "tab-disabled")
         }
     }
     observe({
