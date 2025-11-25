@@ -1,6 +1,6 @@
 # ProteoBoostR
 
-ProteoBoostR is a Shiny-based tool for supervised classification (e.g. biomarker identification) in proteomics data. It leverages the powerful XGBoost algorithm combined with Bayesian optimization to train and evaluate predictive models. The tool automatically merges proteomics expression data with sample annotations, performs data preprocessing, and outputs key files for further analysis.
+ProteoBoostR is a Shiny-based tool for supervised classification in proteomics data. It leverages the powerful XGBoost algorithm combined with Bayesian optimization to train and evaluate predictive models. The tool automatically merges proteomics expression data with sample annotations, performs data preprocessing, and outputs key files for further analysis. In addition to training and testing, ProteoBoostR supports applying trained models to independent datasets directly in the UI.
 
 ![ProteoBoostR UI](screenshot_ProteoBoostR_UI.png)
 
@@ -15,10 +15,14 @@ ProteoBoostR is a Shiny-based tool for supervised classification (e.g. biomarker
 - **Model Testing:**  
   Evaluates the model to compute predicted probabilities, evaluation metrics, confusion matrix, and ROC curve.
 
+- **Model Application:**  
+  Apply a trained model to new, independent datasets.  
+  - Without labels: outputs prediction scores per sample.  
+  - With labels: additionally displays confusion matrix, ROC curve, and evaluation metrics.
+
 ## Running ProteoBoostR
 
-Using Docker ensures consistent, reproducible results by running ProteoBoostR with official Windows R binaries, which avoids compatibility issues seen with Linux or Conda-based R installations.
-This Docker approach prevents discrepancies or failures in AUC calculations caused by differences in compiled R packages.
+Using Docker ensures consistent, reproducible results by running ProteoBoostR with pinned R environments and packages. This approach prevents discrepancies or failures (e.g., in AUC calculations) caused by differences in compiled R packages.
 
 ### Prerequisites
 #### Build the Docker Image
@@ -27,46 +31,62 @@ This Docker approach prevents discrepancies or failures in AUC calculations caus
    ```bash
    git clone https://github.com/SchillingLabProteomics/ProteoBoostR
    cd ProteoBoostR
-
-2. **Build the Docker image:**
-    For Windows 11, you can use the following command:
-   ```bash
-   docker build -t proteoboostr .
    ```
-   For Windows Server >= 2019, you can use the following command:
-   ```bash
-    docker build --build-arg BASE_IMAGE=mcr.microsoft.com/windows/servercore:ltsc2022 -t proteoboostr .
-    ```   
+
+2. **Build the Docker image (choose your platform):**
+   - Windows (Windows 11 / Server):
+     ```bash
+     docker build -t proteoboostr .
+     ```
+     Or for Windows Server >= 2019:
+     ```bash
+     docker build --build-arg BASE_IMAGE=mcr.microsoft.com/windows/servercore:ltsc2022 -t proteoboostr .
+     ```
+   - Linux / macOS:
+     ```bash
+     docker build -f Dockerfile.linux -t proteoboostr-linux .
+     ```
 
 #### Run the Docker Container
 Run the container by mapping port 3838:
 
-```bash
-docker run proteoboostr -d -p 3838:3838 -v C:\host\path\to\outputs:C:\shinyapp\outputs proteoboostr
-```
+- Windows:
+  ```bash
+  docker run -d -p 3838:3838 -v C:\host\path\to\outputs:C:\shinyapp\outputs --name proteoboostr proteoboostr
+  ```
 
-Replace `C:\host\path\to\outputs` with the full path where you want to save the outputs (locate them in a subdirectory).
-Open a browser and navigate to `http://localhost:3838`. Use only a folder name as output directory (which needs to be created in the host machine) when running as a Docker image.
+- Linux / macOS:
+  ```bash
+  docker run -d -p 3838:3838 -v /absolute/host/path/to/outputs:/app/outputs --name proteoboostr proteoboostr-linux
+  ```
+
+Replace the host path with the full path where you want to save outputs.
+
+Open a browser and navigate to `http://localhost:3838`.
+
+Notes:
+- When running inside Docker, enter only a folder name (no slashes) as the Output Directory in the UI. The app will write into the mapped `outputs` folder inside the container.
+- The app accepts uploads up to 100 MB per file.
 
 
 ## Workflow Overview
 
-1. **Input Tab**
+1. **Input for Training**
    - **Upload Files:**  
      - **Annotation File (TSV):** The first column contains sample IDs.
      - **Protein Matrix (TSV):** Rows are protein IDs; columns are sample IDs.
    - **Output Directory:**  
-     Enter the full path where output files will be saved.
+     Enter the target path (local runs) or a folder name only (Docker runs).
    - **Annotation Column & Class Labels:**  
      Select the annotation column (excluding sample_id) and define which values represent the negative (0) and positive (1) classes.
    - **Protein Subset (Optional):**  
      Either upload a list of protein IDs (one per line, no header) or type them manually.
+   - **Train/Test Split & Seed:**  
+     Set the train/test split and the random seed for reproducibility.
 
 2. **Model Training Tab**
-   - **Adjust Training Settings:**  
-     Set the train/test split.
-   - **Bayesian Optimization:**  
-     Use default hyperparameter ranges or adjust if needed.
+   - **Adjust Bayesian Optimization Settings:**  
+     General parameters (learning rate, depth, sampling) are visible. Advanced parameter are collapsed by default. Adjust ranges as needed or just use defaults to start with.
    - **Start Training:**  
      The app merges and preprocesses data, partitions it, tunes hyperparameters, trains the XGBoost model, and automatically saves:
      - The transposed merged (annotated) training matrix (TSV)
@@ -74,29 +94,35 @@ Open a browser and navigate to `http://localhost:3838`. Use only a folder name a
      - The trained model (RDS)
 
 3. **Model Testing Tab**
-   - **Model Selection:**  
-     Optionally upload a pretrained model (disabled if a model was trained in-session).
    - **Evaluate Model:**  
-     When you click "Evaluate on Test Data," the app calculates predictions, evaluation metrics, confusion matrix, and ROC curve.
+     When you click "Evaluate", model performance is evaluated in the testing set and shows the ranked predictions, and displays evaluation metrics, confusion matrix, and ROC curve.
    - **Outputs Saved Automatically:**  
      - The transposed merged (annotated) testing matrix (TSV)
      - Predicted probabilities (TSV)
      - Evaluation results (TSV)
      - Confusion matrix (TSV)
      - ROC curve (PNG)
-     - Application log (LOG)
 
-4. **Performance Visualization & Log Tabs**
-   - **Performance Visualization:**  
-     View the ROC curve.
+4. **Model Application Tab**
+   - **Upload:**  
+     Provide a new protein matrix and optionally an annotation file.
+   - **Model & Threshold:**  
+     Use the model trained in the session or upload a saved `.rds` model, and provide an evaluation TSV to seed the base threshold.
+   - **Outputs & Visualization:**  
+     - Without labels: ranked prediction scores and prediction table.  
+     - With labels: ranked prediction scores abd prediction table, confusion matrix, ROC curve, and metrics.  
+     All outputs are saved in the chosen output directory.
+
+5. **Log Tab**
    - **Log:**  
-     See detailed processing and error messages.
+     See detailed processing messages.
 
 ## Quick Start (Defaults)
 1. Upload your annotation and protein matrix files.
 2. Set the annotation column and class labels.
 3. (Optionally) Provide a protein subset.
-4. Specify your output directory.
-5. Click **"Start Training"** to process data and train the model.
-6. Go to **"Model Testing"** to evaluate the model and automatically save all test outputs.
-7. Review the ROC curve in **"Performance Visualization"** and check logs in **"Log"**.
+4. Specify your output directory (folder name only in Docker).
+5. Set the random seed (optional) and the train/test split.
+6. Click **"Start Training"** to process data and train the model.
+7. Go to **"Model Testing"** to evaluate the model. Review the ranked prediction table, metrics, confusion matrix, and ROC curve.
+8. Use **"Model Application"** to apply your model to independent datasets (with or without labels).
