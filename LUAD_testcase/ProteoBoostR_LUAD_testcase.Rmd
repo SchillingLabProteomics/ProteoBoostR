@@ -1,0 +1,179 @@
+### ProteoBoostR ###
+
+#Application example: Detecting lung cancer in serum
+
+#libraries
+```{r}
+library(tidyverse)
+library(readxl)
+library(limma)
+library(xgboost)
+```
+#Raw files were downloaded (PXD047854) and searched in DIANN (v.2.3.0-preview)
+#using default settings against the human fasta (one protein per gene)
+
+#load data
+```{r}
+#PXD047854: 38 samples (of 40 samples total) for model training
+train_data <- read.table("TrainingTesting_data.tsv", header = TRUE)
+
+train_annot <- read.table("TrainingTesting_annot.tsv", header = TRUE)
+
+#PXD047854: 2 samples (of 40 samples total) as held-out application samples
+appl_data <- read.table("Application_data.tsv", header = TRUE)
+
+appl_annot <- read.table("Application_annot.tsv", header = TRUE)
+```
+
+#differential abundance analysis
+```{r}
+#sparsity reduction
+train_data_fil <- train_data %>%
+  filter(rowSums(is.na(.)) / ncol(.) <= 0.3)
+
+classes <- train_annot$phenotype
+
+design <- model.matrix(~0+classes)
+
+row.names(design) <- colnames(train_data_fil)
+colnames(design) <- colnames(design) %>% str_remove(., "classes") %>% str_trim()
+
+#define contrasts
+contrast.matrix <- makeContrasts(CancervsControl = cancer-control,
+                                 levels = design)
+
+n_contrasts <- dim(contrast.matrix)[2]
+
+#run limma
+fit <- lmFit(train_data_fil, 
+             design = design,
+             method = "robust")
+
+fit2 <- contrasts.fit(fit, 
+                      contrast.matrix)
+
+fit2 <- eBayes(fit2)
+
+limma_classes <- topTable(fit2, adjust.method = "BH", number = Inf)
+
+limma_classes$Protein.Group <- row.names(limma_classes)
+
+#volcano plot
+limma_classes <- limma_classes %>%
+  mutate(Differentially_expressed = case_when(adj.P.Val <= 0.05 ~ TRUE, TRUE ~ FALSE)) 
+
+limma_classes <- limma_classes %>%
+  mutate(col = case_when(Differentially_expressed == TRUE & logFC < 0 ~ "Control", 
+                         Differentially_expressed == TRUE & logFC > 0 ~ "Cancer",
+                         Differentially_expressed == FALSE ~ "none")) 
+
+ggplot(data = limma_classes, 
+       mapping = aes(x = logFC,
+                     y = -log10(adj.P.Val),
+                     color = col)) + 
+  geom_point(size = 0.2) + 
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "gray20", size = 0.5) +
+  labs(y = "-Log10 (adj. p-value)", x = "Log2 FC") + 
+  scale_x_continuous(limits = c(-2,2.7), breaks = c(-2, 0, 2)) +
+  scale_y_continuous(limits = c(0, 6), breaks = c(0, 3, 6)) +
+  theme(
+        axis.text = element_text(size = 8, color = "black"),
+        axis.title.x = element_text(size = 8, color = "black", face = "bold", margin = margin(t = 0)),
+        axis.title.y = element_text(size = 8, color = "black", face = "bold", margin = margin(r = 3)),
+        strip.text = element_text(size = 8, color = "black", face = "bold"),
+        strip.background = element_rect(fill = "white"),
+        legend.text = element_text(size = 8, color = "black"),
+        legend.title = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(color = "white"),
+        panel.border = element_rect(colour = "black", 
+                                    fill = NA, 
+                                    linewidth = 0.8),
+        legend.spacing.y = unit(0.5, "cm"),
+        legend.position = "none") +
+  scale_color_manual(values = c("Cancer" = "#bd0026", "Healthy" = "#78a182", "FALSE" = "grey20"))
+
+features_up <- limma_classes %>%
+  filter(Differentially_expressed) %>%
+  arrange(-logFC) %>%
+  head(10)
+features_down <- limma_classes %>%
+  filter(Differentially_expressed) %>%
+  arrange(logFC) %>%
+  head(10)
+features <- c(features_up$Protein.Group, features_down$Protein.Group)
+
+write.table(features, file = "features.tsv", 
+            quote = FALSE,      # no quotes around strings
+            row.names = FALSE,  # no row numbers
+            col.names = FALSE,  # no column header
+            sep = "\t")         # tab-separated
+```
+
+#run ProteoBoostR
+```{r}
+#install ProteoBoostR
+
+#train model on training data
+#cancer as positive class, control as negative class
+#use subset of features
+#use a train/test split of 0.7
+#use the default parameter bounds
+
+#apply model on application data
+#cancer as positive class, control as negative class
+#range around threshold: 0.1
+```
+
+#visualize performance
+```{r}
+#load predicted class probabilities and classification threshold
+preds <- read_tsv("ProteoBoostR_output\\predicted_probabilities_20251117140538_adhoc1.tsv")
+eval_res <- read_tsv("ProteoBoostR_output\\evaluation_results_20251117140538_adhoc1.tsv")
+threshold <- eval_res$Applied_Threshold
+
+preds <- left_join(preds, appl_annot)
+
+#exclude sample with probabilities of +- 0.1 around threshold
+preds <- preds %>%
+  filter(predicted_probability > threshold+0.1 | predicted_probability < threshold-0.1)
+
+preds <- preds %>%
+  mutate(pred_label = case_when(predicted_probability > threshold ~ "Cancer",
+                                predicted_probability < threshold ~ "Control"))
+
+
+preds$pred_label <- factor(preds$pred_label, levels = c("Control", "Cancer"))
+
+preds <- preds %>%
+  mutate(true_label = case_when(phenotype == "cancer" ~ "Cancer",
+                                phenotype == "control" ~ "Control"))
+
+preds$pred_label <- factor(preds$pred_label, levels = c("Cancer", "Control"))
+
+
+#ranked prediction 
+ggplot(preds, aes(x = pred_label, y = predicted_probability, color = pred_label)) +
+  geom_point() +
+  geom_hline(yintercept = threshold) +
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = threshold-0.1, ymax = threshold+0.1, alpha = 0.1, fill = "grey20") +
+  scale_y_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  theme(
+        axis.text = element_text(size = 8, color = "black"),
+        axis.title.x = element_text(size = 8, color = "black", face = "bold", margin = margin(t = 0)),
+        axis.title.y = element_text(size = 8, color = "black", face = "bold", margin = margin(r = 3)),
+        strip.text = element_text(size = 8, color = "black", face = "bold"),
+        strip.background = element_rect(fill = "white"),
+        legend.text = element_text(size = 8, color = "black"),
+        legend.title = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(color = "white"),
+        panel.border = element_rect(colour = "black", 
+                                    fill = NA, 
+                                    linewidth = 0.8),
+        legend.spacing.y = unit(0.5, "cm"),
+        legend.position = "none") +
+  labs(x = "Class", y = "Class probability", color = "") +
+  scale_color_manual(values = c("Control" = "#78a182", "Cancer" = "#bd0026"))
+ggsave("Application_preds.png", units = "cm", width = 6, height = 3.65)
+```

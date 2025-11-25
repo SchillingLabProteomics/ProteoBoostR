@@ -1,0 +1,54 @@
+
+[2025-11-17 14:05:49.835828] Protein matrix loaded. Dimensions: 4621 x 38
+[2025-11-17 14:05:51.477441] Annotation file loaded. Rows: 38 Cols: 2
+[2025-11-17 14:05:56.369515] Subset file uploaded with 20 IDs.
+[2025-11-17 14:05:58.76326] Auto-merging annotation + protein data...
+[2025-11-17 14:05:58.839605] Applying subset from file with 20 IDs.
+[2025-11-17 14:05:58.842972] Final columns after numeric conversion: sample_id, P80511, P04908, P02741, P81172, Q5TEC6, P62805, P18827, Q03252, P25815, O60814, P18206, A5A3E0, Q5SZK8, P00491, P63096, P60174, P12814, P98172, Q8N392, P07195, phenotype
+[2025-11-17 14:05:58.844887] Merging complete.
+[2025-11-17 14:05:58.847798] User clicked Continue on Input Tab.
+[2025-11-17 14:05:58.868585] Data subset applied to training and testing matrices.
+[2025-11-17 14:05:58.876604] Training and testing matrices written (transposed).
+[2025-11-17 14:06:00.210194] User clicked Continue on Model Training. Starting Bayesian Optimization and training model...
+[2025-11-17 14:06:00.212168] Bayesian-opt bounds: eta=[0.100, 0.300], max_depth=[3, 6], subsample=[0.80, 1.00], colsample_bytree=[0.80, 1.00], min_child_weight=[0, 10], gamma=[0.00, 5.00], alpha=[0.00, 5.00], lambda=[0, 5]
+[2025-11-17 14:06:01.335624] xgb_cv_bayes => rounds: 2 eta: 0.122740682261065 max_depth: 5 subsample: 0.938718258356676 colsample_bytree: 0.967459125630558 min_child_weight: 3 gamma: 4.05299276229925 alpha: 2.28045741212554 lambda: 3.79835317726247 AUC: 0.5
+[2025-11-17 14:06:02.401247] xgb_cv_bayes => rounds: 2 eta: 0.224459880962968 max_depth: 3 subsample: 0.908994967117906 colsample_bytree: 0.857244656933472 min_child_weight: 3 gamma: 2.62848773389123 alpha: 1.32593335933052 lambda: 1.00624018814415 AUC: 0.5
+[2025-11-17 14:06:04.261839] xgb_cv_bayes => rounds: 2 eta: 0.221854946576059 max_depth: 4 subsample: 0.856546716718003 colsample_bytree: 0.853364156000316 min_child_weight: 2 gamma: 4.57329083001241 alpha: 1.52336101513356 lambda: 1.29404909326695 AUC: 0.725
+[2025-11-17 14:06:06.228468] xgb_cv_bayes => rounds: 2 eta: 0.224675888335332 max_depth: 5 subsample: 0.984686696855351 colsample_bytree: 0.837344557931647 min_child_weight: 0 gamma: 4.15672523435205 alpha: 2.5365343503654 lambda: 4.96075208764523 AUC: 0.5
+[2025-11-17 14:06:07.701136] xgb_cv_bayes => rounds: 2 eta: 0.272183076711372 max_depth: 5 subsample: 0.858463168051094 colsample_bytree: 0.846445182105526 min_child_weight: 2 gamma: 0.22885131649673 alpha: 0.905481041409075 lambda: 4.03676170157269 AUC: 0.866666666666667
+[2025-11-17 14:06:26.977815] xgb_cv_bayes => rounds: 2 eta: 0.277625905442983 max_depth: 6 subsample: 0.833270883979276 colsample_bytree: 0.849526983313262 min_child_weight: 4 gamma: 4.62480186950415 alpha: 0.2134227193892 lambda: 0.500964127713814 AUC: 0.5
+[2025-11-17 14:06:46.524202] xgb_cv_bayes => rounds: 2 eta: 0.153681924333796 max_depth: 4 subsample: 0.880702953180298 colsample_bytree: 0.853028377331793 min_child_weight: 4 gamma: 0.147629900602624 alpha: 2.36805145046674 lambda: 1.85100236209109 AUC: 0.5
+[2025-11-17 14:07:06.350593] xgb_cv_bayes => rounds: 2 eta: 0.155529756145552 max_depth: 4 subsample: 0.83697795830667 colsample_bytree: 0.827733478695154 min_child_weight: 2 gamma: 4.53274178202264 alpha: 0.176511235767975 lambda: 4.87196767004207 AUC: 0.775
+[2025-11-17 14:07:29.923663] xgb_cv_bayes => rounds: 2 eta: 0.213836353691295 max_depth: 5 subsample: 0.871764624165371 colsample_bytree: 0.954281464079395 min_child_weight: 0 gamma: 2.7798088081181 alpha: 3.4004277701024 lambda: 3.53903818991967 AUC: 0.5
+[2025-11-17 14:07:50.50339] xgb_cv_bayes => rounds: 2 eta: 0.153302489686757 max_depth: 4 subsample: 0.992530664196238 colsample_bytree: 0.845827651629224 min_child_weight: 3 gamma: 0.324202455813065 alpha: 1.22593156527728 lambda: 1.23477105633356 AUC: 0.5
+[2025-11-17 14:08:12.463272] xgb_cv_bayes => rounds: 2 eta: 0.154301851475611 max_depth: 5 subsample: 0.820278400136158 colsample_bytree: 0.86544461348094 min_child_weight: 3 gamma: 0.626854506554082 alpha: 2.83469102345407 lambda: 3.3725272922311 AUC: 0.5
+[2025-11-17 14:08:35.976467] xgb_cv_bayes => rounds: 2 eta: 0.113376401271671 max_depth: 5 subsample: 0.867314797127619 colsample_bytree: 0.892178893787786 min_child_weight: 0 gamma: 4.31547624524683 alpha: 0.328514070715755 lambda: 2.52482466865331 AUC: 0.785555555555556
+[2025-11-17 14:08:59.593426] xgb_cv_bayes => rounds: 2 eta: 0.213072420749813 max_depth: 4 subsample: 0.803918058890849 colsample_bytree: 0.881374431354925 min_child_weight: 7 gamma: 3.7048814620357 alpha: 4.5312103908509 lambda: 1.74543224624358 AUC: 0.5
+[2025-11-17 14:09:25.191537] xgb_cv_bayes => rounds: 2 eta: 0.198688997235149 max_depth: 5 subsample: 0.929038141202182 colsample_bytree: 0.845515976566821 min_child_weight: 2 gamma: 1.41751118237153 alpha: 3.12005866202526 lambda: 1.04806614806876 AUC: 0.776388888888889
+[2025-11-17 14:09:49.375718] xgb_cv_bayes => rounds: 2 eta: 0.288516633305699 max_depth: 5 subsample: 0.855630524642766 colsample_bytree: 0.97431132546626 min_child_weight: 7 gamma: 0.173003601375967 alpha: 0.327529241330922 lambda: 1.93071924732067 AUC: 0.5
+[2025-11-17 14:10:15.002615] xgb_cv_bayes => rounds: 2 eta: 0.150210969010368 max_depth: 6 subsample: 0.849353316612542 colsample_bytree: 0.981000820966437 min_child_weight: 8 gamma: 1.52824328746647 alpha: 1.59238209365867 lambda: 1.14221441792324 AUC: 0.5
+[2025-11-17 14:10:44.375603] xgb_cv_bayes => rounds: 2 eta: 0.295811033020595 max_depth: 4 subsample: 0.826448629144367 colsample_bytree: 0.982049736083782 min_child_weight: 2 gamma: 0.342578942359813 alpha: 1.57206811129802 lambda: 2.94824585672817 AUC: 0.847222222222222
+[2025-11-17 14:11:08.197532] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-11-17 14:11:08.199598] ERROR: cv_result is NULL.
+[2025-11-17 14:11:33.756005] xgb_cv_bayes => rounds: 2 eta: 0.109886965388432 max_depth: 5 subsample: 0.806360523030162 colsample_bytree: 0.864879526617006 min_child_weight: 1 gamma: 3.24138095835224 alpha: 4.65669406112283 lambda: 2.77905557304621 AUC: 0.5
+[2025-11-17 14:12:01.099945] xgb_cv_bayes => rounds: 2 eta: 0.251310658175498 max_depth: 5 subsample: 0.916881947172806 colsample_bytree: 0.8559293277096 min_child_weight: 2 gamma: 2.85942563670687 alpha: 0.288907192880288 lambda: 1.63417762960307 AUC: 0.95
+[2025-11-17 14:12:31.342359] xgb_cv_bayes => rounds: 2 eta: 0.29499847390689 max_depth: 4 subsample: 0.807011428056285 colsample_bytree: 0.838649999862537 min_child_weight: 8 gamma: 1.27172638662159 alpha: 3.33309442386962 lambda: 4.28714997018687 AUC: 0.5
+[2025-11-17 14:13:02.523409] xgb_cv_bayes => rounds: 2 eta: 0.24682236853987 max_depth: 5 subsample: 0.988451188523322 colsample_bytree: 0.946241164812818 min_child_weight: 0 gamma: 1.67402497609146 alpha: 3.19013918982819 lambda: 3.26712999958545 AUC: 0.5
+[2025-11-17 14:13:36.115306] xgb_cv_bayes => rounds: 2 eta: 0.256495289424276 max_depth: 5 subsample: 0.990606198310992 colsample_bytree: 0.93847158227322 min_child_weight: 2 gamma: 2.04741791694977 alpha: 0.0881746692133863 lambda: 0.791273828798522 AUC: 0.891666666666667
+[2025-11-17 14:14:09.60454] ERROR inside xgb.cv: missing value where TRUE/FALSE needed
+[2025-11-17 14:14:09.606622] ERROR: cv_result is NULL.
+[2025-11-17 14:14:42.217909] xgb_cv_bayes => rounds: 2 eta: 0.107377582974732 max_depth: 6 subsample: 0.837679144367576 colsample_bytree: 0.87563464678824 min_child_weight: 6 gamma: 0.609245056984946 alpha: 3.27837491990067 lambda: 1.69934126548469 AUC: 0.5
+[2025-11-17 14:14:42.245898] Bayesian Optimization done. Best AUC = 0.95
+[2025-11-17 14:14:42.250586] Final training columns used for XGB: P80511, P04908, P02741, P81172, Q5TEC6, P62805, P18827, Q03252, P25815, O60814, P18206, A5A3E0, Q5SZK8, P00491, P63096, P60174, P12814, P98172, Q8N392, P07195
+[2025-11-17 14:14:45.808883] Model saved to: D:\tools\ProteoBoostR\LC_testcase\ProteoBoostR_output/xgb_model_20251117140538.rds
+[2025-11-17 14:14:45.813785] Best hyperparameters written.
+[2025-11-17 14:14:45.816354] Final XGBoost model trained.
+[2025-11-17 14:16:24.006643] Evaluating model on test data...
+[2025-11-17 14:16:24.009436] Test model columns used for XGB: P80511, P04908, P02741, P81172, Q5TEC6, P62805, P18827, Q03252, P25815, O60814, P18206, A5A3E0, Q5SZK8, P00491, P63096, P60174, P12814, P98172, Q8N392, P07195
+[2025-11-17 14:16:24.090811] Test evaluation complete.
+[2025-11-17 14:16:24.097427] Predicted probabilities written.
+[2025-11-17 14:16:24.102591] Evaluation results written.
+[2025-11-17 14:16:24.107044] Confusion matrix written.
+[2025-11-17 14:16:24.737743] ROC curve written as PNG.
+[2025-11-17 14:16:24.739782] Test outputs written.
+[2025-11-17 14:16:51.730367] Ad-hoc 1 outputs written to: D:\tools\ProteoBoostR\LC_testcase\ProteoBoostR_output

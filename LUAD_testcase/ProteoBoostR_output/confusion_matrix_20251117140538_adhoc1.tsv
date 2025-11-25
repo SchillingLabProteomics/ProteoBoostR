@@ -1,0 +1,5 @@
+Prediction	Reference	Freq
+control	control	1
+cancer	control	0
+control	cancer	0
+cancer	cancer	1
