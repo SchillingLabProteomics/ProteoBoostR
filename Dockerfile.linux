@@ -1,0 +1,20 @@
+FROM rocker/r-ver:4.3.3
+
+RUN apt-get update && apt-get install -y \
+    libcurl4-openssl-dev libssl-dev libxml2-dev libgit2-dev libssh2-1-dev \
+    build-essential cmake libgomp1 pandoc \
+ && rm -rf /var/lib/apt/lists/*
+
+# Shiny + your deps (or let install_requirements.R do it)
+RUN R -q -e "install.packages(c('shiny'))"
+
+WORKDIR /app
+COPY app.R /app/app.R
+COPY install_requirements.R /app/install_requirements.R
+COPY www /app/www
+RUN R -q -e "source('/app/install_requirements.R')"
+
+RUN mkdir -p /app/outputs && echo "/app/outputs" > /app/ProteoBoostR.filesystem
+
+EXPOSE 3838
+CMD ["R", "-q", "-e", "shiny::runApp('/app/app.R', host='0.0.0.0', port=3838)"]
