@@ -1,0 +1,12 @@
+Param	Value
+booster	gbtree
+objective	binary:logistic
+eval_metric	auc
+eta	0.272183076711372
+max_depth	5
+subsample	0.858463168051094
+colsample_bytree	0.846445182105526
+min_child_weight	2
+gamma	0.22885131649673
+alpha	0.905481041409075
+lambda	4.03676170157269

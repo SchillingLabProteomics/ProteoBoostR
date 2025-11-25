@@ -1,0 +1,5 @@
+Prediction	Reference	Freq
+nmf2/nmf3	nmf2/nmf3	61
+nmf1	nmf2/nmf3	1
+nmf2/nmf3	nmf1	1
+nmf1	nmf1	21
