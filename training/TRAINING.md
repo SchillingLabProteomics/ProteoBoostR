@@ -36,7 +36,7 @@ Use the LUAD example dataset in `LUAD_testcase/`:
 
 # Step 1: Open the app
 
-![Landing Page](training/1_Landing_Page.png)
+![Landing Page](./1_Landing_Page.png)
 
 **Hands on: Confirm the UI layout**
 1. Open the app in your browser.
@@ -45,7 +45,7 @@ Use the LUAD example dataset in `LUAD_testcase/`:
 
 # Step 2: Provide input data
 
-![Input](training/2_Input.png)
+![Input](./2_Input.png)
 
 **Hands on: Configure the input tab**
 1. Upload `TrainingTesting_annot.tsv` as the annotation file.
@@ -66,7 +66,7 @@ Use the LUAD example dataset in `LUAD_testcase/`:
 
 # Step 3: Train the model
 
-![Model Training](training/3_Model_Training.png)
+![Model Training](./3_Model_Training.png)
 
 **Hands on: Run Bayesian optimization and training**
 1. Move to the Model Training tab.
@@ -84,7 +84,7 @@ Outputs saved automatically:
 
 # Step 4: Test the model
 
-![Model Testing Full](training/4_Model_Testing_full.png)
+![Model Testing Full](./4_Model_Testing_full.png)
 
 **Hands on: Evaluate performance**
 1. Open the Model Testing tab.
@@ -109,7 +109,7 @@ Outputs saved automatically:
 
 # Step 5: Apply the model to new data
 
-![Model Application Full](training/5_Model_Application_full.png)
+![Model Application Full](./5_Model_Application_full.png)
 
 **Hands on: Apply to independent samples**
 1. Upload `Application_data.tsv` as the protein matrix.
