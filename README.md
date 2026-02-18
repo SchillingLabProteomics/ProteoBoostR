@@ -117,12 +117,5 @@ Notes:
    - **Log:**  
      See detailed processing messages.
 
-## Quick Start (Defaults)
-1. Upload your annotation and protein matrix files.
-2. Set the annotation column and class labels.
-3. (Optionally) Provide a protein subset.
-4. Specify your output directory (folder name only in Docker).
-5. Set the random seed (optional) and the train/test split.
-6. Click **"Start Training"** to process data and train the model.
-7. Go to **"Model Testing"** to evaluate the model. Review the ranked prediction table, metrics, confusion matrix, and ROC curve.
-8. Use **"Model Application"** to apply your model to independent datasets (with or without labels).
+## Training
+Find a step-by-step guide to training and testing a model in the [TRAINING.md](training/TRAINING.md).
